@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/plugins/tiff_2_train" >
+        <file>icon.png</file>
+    </qresource>
+</RCC>
