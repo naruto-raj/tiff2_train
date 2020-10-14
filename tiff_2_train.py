@@ -190,7 +190,7 @@ class traindata_generator:
 
     def select_tiff(self):
         self.tiffile, _filter = QFileDialog.getOpenFileName(self.dlg, 'Select raster',
-                                                            '/home/vasanth/Documents/data_collection/EPC/ukarine_data_collection/',
+                                                            '/home/',
                                                             "GeoTif (*.tif)")
         self.dlg.input_tiffdd.addItem(self.tiffile)
         time.sleep(0.25)
@@ -201,7 +201,7 @@ class traindata_generator:
     #
     def select_vector(self):
         self.kmlfile = QFileDialog.getExistingDirectory(self.dlg, 'Select vector',
-                                                        '/home/vasanth/Documents/data_collection/EPC/ukarine_data_collection/')
+                                                        '/home/')
         self.dlg.input_kmldd.setText(self.kmlfile)
         time.sleep(0.25)
         # os.chdir(self.kmlfile)
@@ -209,7 +209,7 @@ class traindata_generator:
     #
     def select_outputdirectory(self):
         self.outDirectory = QFileDialog.getExistingDirectory(self.dlg, 'Select export directory',
-                                                             '/home/vasanth/Documents/data_collection/EPC/ukarine_data_collection/')
+                                                             '/home/')
         self.dlg.outputDirectory.setText(self.outDirectory)
         time.sleep(0.25)
         # os.chdir(self.outDirectory)
@@ -217,7 +217,7 @@ class traindata_generator:
     #
     def select_bound(self):
         self.boundkml, _filter = QFileDialog.getOpenFileName(self.dlg, 'Select Boundary',
-                                                             '/home/vasanth/Documents/data_collection/EPC/ukarine_data_collection/',
+                                                             '/home/',
                                                              "KML (*.kml)")
         print(self.boundkml)
         if self.boundkml != ' ':
