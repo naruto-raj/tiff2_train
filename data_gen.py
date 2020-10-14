@@ -283,12 +283,4 @@ class data_generator():
                                      kml=filter_objects, xrect=xrect)
         print('File Writing Ended')
 
-raster='/home/vasanth/Documents/data_collection/EPC/ukarine_data_collection/clipped_bound.tif'
-vector_folders='/home/vasanth/Documents/data_collection/EPC/ukarine_data_collection/shp'
-output ='/home/vasanth/Documents/data_collection/EPC/ukarine_data_collection/new'
-boundary='/home/vasanth/Documents/data_collection/EPC/ukarine_data_collection/bound/clipped_bound.shp'
-
-# new = data_generator(raster,vector_folders,output)
-# new1 = data_generator(raster,vector_folders,output,boundary=boundary)
-
 
