@@ -59,7 +59,10 @@ class data_generator():
         for file_name in os.listdir(self.input_vector):
             if file_name.endswith(".shp"):
                 vector_file_path = os.path.join(self.input_vector, file_name)
-                file_name = file_name.split('/')[-1][:-4]
+                if file_name.find('/') != -1:
+                    file_name = file_name.split('/')[-1][:-4]
+                else:
+                    file_name = file_name.split('\\')[-1][:-4]
                 self.objects[file_name] = self.vector_reader(vector_file_path)
 
     @staticmethod
@@ -77,7 +80,6 @@ class data_generator():
         """slide a window across the image"""
         for y in range(0, image.shape[0], stepsize):
             for x in range(0, image.shape[1], stepsize):
-                print(x, y, windowSize)
                 yield x, y, image[y:y + windowsize[1], x:x + windowsize[0]]
 
     def crop_tiff(self):
@@ -117,7 +119,7 @@ class data_generator():
     def create_xml_file(self, folder_name, file_name, img_path_dir, kml, xrect):
         folder_n = folder_name
         filenameg = file_name
-        path_n = img_path_dir + '/' + folder_n + '/' + filenameg + '.jpg'
+        path_n = os.path.join(img_path_dir,folder_n,filenameg + '.jpg')
         s_width = str(xrect[2] - xrect[0])
         s_height = str(xrect[3] - xrect[1])
         s_depth = '3'
@@ -144,14 +146,14 @@ class data_generator():
                 for j in range(0, len(kml[key])):
                     self.create_object(annotation=annotation, nam=key, kml=kml, ind=j)
         mydata = etree.tostring(annotation, pretty_print=True)
-        myfile = open(img_path_dir + '/' + folder_n + '/' + filenameg + '.xml', 'wb')
+        myfile = open(os.path.join(img_path_dir,folder_n,filenameg + '.xml'), 'wb')
         myfile.write(mydata)
 
     @staticmethod
     def create_json_file(folder_name, file_name, img_path_dir, kml, xrect):
         folder_n = folder_name
         filenameg = file_name
-        path_n = img_path_dir + '/' + '/' + filenameg + '.jpg'
+        path_n = os.path.join(img_path_dir,filenameg + '.jpg')
         with open(path_n, mode='rb') as file:
             img = file.read()
         imagedata = base64.b64encode(img).decode("utf-8")
@@ -171,14 +173,14 @@ class data_generator():
                 for j in range(0, len(kml[key])):
                     shape_data = {"label": key, "points": kml[key][j], "shape_type": "polygon", "flags": {}}
                     json_initial['shapes'].append(shape_data)
-        myfile = open(img_path_dir + '/' + folder_n + '/' + filenameg + '.json', 'w')
+        myfile = open(os.path.join(img_path_dir,folder_n,filenameg + '.json'), 'w')
         json.dump(json_initial, myfile)
 
     def label_gen(self):
         if self.bound is not None:
             result = self.crop_tiff()
             self.img = imread(result)
-        for i,(x, y, window) in enumerate(self.sliding_window(self.img, stepSize=self.steps, windowSize=(self.winW, self.winH))):
+        for i,(x, y, window) in enumerate(self.sliding_window(image=self.img, stepsize=self.steps, windowsize=(self.winW, self.winH))):
             filter_objects = {}
             for label in os.listdir(self.input_vector):
                 filter_objects[label[:-4]] = []
@@ -198,9 +200,9 @@ class data_generator():
                 sumo += len(filter_objects[key])
             if sumo >= 1:
                 rgb = cv2.cvtColor(crop_img, cv2.COLOR_BGR2RGB)
-                cv2.imwrite(self.outputDir + '/' + "image" + str(i) + '.jpg', rgb)
-                if not os.path.exists(self.outputDir + '/' + self.out_type):
-                    os.mkdir(self.outputDir + '/' + self.out_type)
+                cv2.imwrite(os.path.join(self.outputDir, "image" + str(i) + '.jpg'), rgb)
+                if not os.path.exists(os.path.join(self.outputDir,self.out_type)):
+                    os.mkdir(os.path.join(self.outputDir,self.out_type))
                 if self.out_type == 'xml':
                     self.create_xml_file(folder_name=self.out_type, file_name='image' + str(i),
                                          img_path_dir=self.outputDir,
